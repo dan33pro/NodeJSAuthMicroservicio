@@ -15,18 +15,16 @@ module.exports = function (injectedStore) {
     }
 
     function upsert(data) {
-        [id, name] = data;
-        if (!name) {
+        const user = {
+            id: data.id,
+            name: data.name,
+        };
+        if (!user.name) {
             return Promise.reject('No se indico la información necesaria');
         }
-        if(!id) {
-            id = nanoid();
+        if(!user.id) {
+            user.id = nanoid();
         }
-
-        const user = {
-            id,
-            name
-        };
         return store.upsert(TABLA, user);
     }
 

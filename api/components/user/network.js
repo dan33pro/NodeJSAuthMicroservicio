@@ -10,7 +10,7 @@ router.post('/', upsert);
 router.put('/', upsert);
 router.delete('/:id', remove);
 
-const list = async (req, res) => {
+async function list(req, res) {
     try {
         const lista = await controller.list();
         response.success(req, res, lista, 200);
@@ -18,9 +18,9 @@ const list = async (req, res) => {
         response.error(req, res, error.message, 500);
     }
     
-};
+}
 
-const get = (req, res) => {
+function get(req, res) {
     controller.get(req.params.id)
         .then((user) => {
             response.success(req, res, user, 200);
@@ -30,7 +30,7 @@ const get = (req, res) => {
         });
 };
 
-const upsert = (req, res) => {
+function upsert(req, res) {
     controller.upsert(req.body)
         .then((user) => {
             response.success(req, res, user, 201);
@@ -40,7 +40,7 @@ const upsert = (req, res) => {
         });
 };
 
-const remove = (req, res) => {
+function remove(req, res) {
     controller.remove(req.params.id)
         .then(() => {
             response.success(req, res, "Registro eliminado", 202);
