@@ -1,3 +1,4 @@
+const nanoid = require('nanoid');
 const TABLA = 'user';
 
 module.exports = function (injectedStore) {
@@ -15,9 +16,13 @@ module.exports = function (injectedStore) {
 
     function upsert(data) {
         [id, name] = data;
-        if (!id || !name) {
-            return Promise.reject('No se indico el id o el nombre');
+        if (!name) {
+            return Promise.reject('No se indico la información necesaria');
         }
+        if(!id) {
+            id = nanoid();
+        }
+
         const user = {
             id,
             name

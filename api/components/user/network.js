@@ -4,8 +4,13 @@ const response = require('../../../network/response')
 const controller = require('./index');
 
 const router = express.Router();
+router.get('/', list);
+router.get('/:id', get);
+router.post('/', upsert);
+router.put('/', upsert);
+router.delete('/:id', remove);
 
-router.get('/', async (req, res) => {
+const list = async (req, res) => {
     try {
         const lista = await controller.list();
         response.success(req, res, lista, 200);
@@ -13,9 +18,9 @@ router.get('/', async (req, res) => {
         response.error(req, res, error.message, 500);
     }
     
-});
+};
 
-router.get('/:id', (req, res) => {
+const get = (req, res) => {
     controller.get(req.params.id)
         .then((user) => {
             response.success(req, res, user, 200);
@@ -23,9 +28,9 @@ router.get('/:id', (req, res) => {
         .catch((err) => {
             response.error(req, res, err.message, 500);
         });
-});
+};
 
-router.post('/', (req, res) => {
+const upsert = (req, res) => {
     controller.upsert(req.body)
         .then((user) => {
             response.success(req, res, user, 201);
@@ -33,9 +38,9 @@ router.post('/', (req, res) => {
         .catch((err) => {
             response.error(req, res, err.message, 500);
         });
-});
+};
 
-router.delete('/:id', (req, res) => {
+const remove = (req, res) => {
     controller.remove(req.params.id)
         .then(() => {
             response.success(req, res, "Registro eliminado", 202);
@@ -43,7 +48,7 @@ router.delete('/:id', (req, res) => {
         .catch((err) => {
             response.error(req, res, err.message, 500);
         });
-});
+};
 
 module.exports = router;
 
