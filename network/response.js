@@ -8,7 +8,7 @@ exports.success = (req, res, message, status) => {
         status: statusCode,
         body: ststausMessage,
     });
-}
+};
 
 exports.error = (req, res, message, status) => {
     let statusCode = status || 500;
@@ -19,4 +19,4 @@ exports.error = (req, res, message, status) => {
         status: statusCode,
         body: ststausMessage,
     });
-}
+};
