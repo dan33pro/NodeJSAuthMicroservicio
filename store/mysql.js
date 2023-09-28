@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const postgres = require('mysql');
 
 const config = require('../config');
 
@@ -10,3 +10,8 @@ const dbconf = {
 };
 
 // Connect!
+let connection;
+
+function handleCon() {
+    connection = mysql.createConnection(dbconf);
+}
