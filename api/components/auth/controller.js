@@ -1,44 +1,83 @@
-const TABLA = "auth";
-const auth = require('../../../auth/index');
-const error = require('../../../utils/error');
-const bcrypt = require('bcrypt');
+const TABLA = {
+    name: "Auth",
+    pk: "id_auth",
+};
+const auth = require("../../../auth/index");
+const error = require("../../../utils/error");
+const sendMail = require("../../../utils/mailMessage");
+const bcrypt = require("bcrypt");
 
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
-        store = require('../../../store/dummy');
+        store = require("../../../store/mysql");
     }
 
-    async function login(username, password) {
-        const data = await store.query(TABLA, { username: username});
-        return bcrypt.compare(password, data.password)
-        .then(sonIguales => {
-            if (sonIguales) {
-                // Generar Token
-                return auth.sign(data);
-            } else {
-                throw error('Información invalida', 418);
-            }
-        });
-    }
-
-    async function upsert(data) {
-        const authData = {
-            id: data.id,
+    async function login(correoElectronico, userPassword) {
+        const TABLAUSERS = {
+            name: "Usuarios",
+            pk: "cedula",
         };
+        const dataUser = await store.query(TABLAUSERS, {
+            correoElectronico: correoElectronico,
+        });
+        const data = await store.query(TABLA, { cedula: dataUser.cedula });
+        return bcrypt
+            .compare(userPassword, data.userPassword)
+            .then((sonIguales) => {
+                if (sonIguales) {
+                    // Generar Token
+                    return auth.sign(data);
+                } else {
+                    throw error("Información invalida", 418);
+                }
+            });
+    }
 
-        if (data.username) {
-            authData.username = data.username;
+    async function senVerificationPin(correoElectronico, metodo) {
+        const TABLAUSERS = {
+            name: "Usuarios",
+            pk: "cedula",
+        };
+        const dataUser = await store.query(TABLAUSERS, {
+            correoElectronico: correoElectronico,
+        });
+        const dataAuth = await store.query(TABLA, { cedula: dataUser.cedula });
+
+        let pin = Math.trunc(Math.random() * 999999);
+        dataAuth.pin = pin;
+
+        await store.upsert(TABLA, dataAuth, "update");
+        switch (metodo) {
+            case "mail":
+                return await sendMail(dataUser.correoElectronico, dataAuth.pin);
+            case "phone":
+                break;
+            default:
+                throw error("Metodo no valido", 405);
         }
-        if (data.password) {
-            authData.password = await bcrypt.hash(data.password, 5);
+    }
+
+    async function upsert(data, accion) {
+        const authData = {};
+
+        if (data.cedula) {
+            authData.cedula = data.cedula;
+        }
+        if (data.userPassword) {
+            authData.userPassword = await bcrypt.hash(data.userPassword, 5);
         }
 
-        return store.upsert(TABLA, authData);
+        if (accion == "update") {
+            let authDatainBD = await store.query(TABLA, { cedula: data.cedula });
+            authData.id_auth = authDatainBD.id_auth;
+        }
+        return store.upsert(TABLA, authData, accion);
     }
 
     return {
         upsert,
         login,
+        senVerificationPin,
     };
 };

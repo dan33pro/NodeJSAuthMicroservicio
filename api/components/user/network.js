@@ -9,7 +9,7 @@ router.get('/', list);
 router.get('/:id', get);
 router.post('/', upsert);
 router.put('/', secure('update'), upsert);
-router.delete('/:id', remove);
+router.delete('/:id', secure('remove'), remove);
 
 async function list(req, res) {
     try {

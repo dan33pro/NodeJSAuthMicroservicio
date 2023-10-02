@@ -37,7 +37,7 @@ const check = {
     own: function(req, owner) {
         const decoded = decodeHeader(req);
         // Comprobar si es o no propio
-        if (decoded.id !== owner) {
+        if (decoded.cedula != owner || !owner) {
             throw error('No puedes hacer esto', 403);
         }
     },

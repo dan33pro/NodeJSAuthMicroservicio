@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 
 const config = require('../config');
+const error = require('../utils/error');
 
 const dbconf = {
     host: config.mysql.host,
@@ -32,14 +33,83 @@ function handleCon() {
             throw err;
         }
     });
-
-    connection.query(
-        'SELECT * FROM test',
-        function(err, results, fields) {
-          console.log(results); // results contains rows returned by server
-          console.log(fields); // fields contains extra meta data about results, if available
-        }
-      );
 }
 
 handleCon();
+
+function list(table) {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT * FROM ${table.name}`, (err, data) => {
+            if(err) return reject(err);
+            resolve(data);
+        });
+    });
+}
+
+function get(table, id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT * FROM ${table.name} WHERE ${table.pk}=${id}`, (err, data) => {
+            if(err) return reject(err);
+            resolve(data);
+        });
+    });
+}
+
+function insert(table, data) {
+    return new Promise((resolve, reject) => {
+        connection.query(`INSERT INTO ${table.name} SET ?`, data, (err, result) => {
+            if(err) return reject(err);
+            resolve(result);
+        });
+    });
+}
+
+function update(table, data) {
+    return new Promise((resolve, reject) => {
+        connection.query(`UPDATE ${table.name} SET ? WHERE ${table.pk}=?`, [data, data[table.pk]], (err, result) => {
+            if(err) return reject(err);
+            resolve(result);
+        });
+    });
+}
+
+function upsert(table, data, accion) {
+    switch(accion) {
+        case 'insert':
+            return insert(table, data);
+        case 'update':
+            return update(table, data);
+        default:
+            throw error('No se especifica la acción en la petición', 405);
+    }
+}
+
+function query(table, query) {
+    return new Promise((resolve, reject) => {
+        const key = Object.keys(query)[0];
+        const value = query[key];
+        connection.query(`SELECT * FROM ${table.name} WHERE ${key}='${value}'`, (err, res) => {
+            if(err) {
+                return reject(err);
+            }
+            resolve(res[0] || null);
+        });
+    });
+}
+
+function remove(table, id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`DELETE FROM ${table.name} WHERE ${table.pk}=${id}`, (err, data) => {
+            if(err) return reject(err);
+            resolve(data);
+        });
+    });
+}
+
+module.exports = {
+    list,
+    get,
+    upsert,
+    query,
+    remove,
+};

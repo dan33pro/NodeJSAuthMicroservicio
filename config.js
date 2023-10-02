@@ -13,5 +13,9 @@ module.exports = {
         password: process.env.MYSQL_PASSWORD || '',
         database: process.env.MYSQL_DB || '',
         port: process.env.MYSQL_PORT || '',
+    },
+    sendMail: {
+        mail: process.env.SEND_MAIL || '',
+        password: process.env.APLICATION_PASSWORD,
     }
 };

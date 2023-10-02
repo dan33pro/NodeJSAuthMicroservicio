@@ -1,11 +1,13 @@
-const nanoid = require('nanoid');
 const auth = require('../auth');
-const TABLA = 'user';
+const TABLA = {
+    name: 'Usuarios',
+    pk: 'cedula',
+};
 
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
-        store = require('../../../store/dummy');
+        store = require('../../../store/mysql');
     }
     function list() {
         return store.list(TABLA);
@@ -17,25 +19,26 @@ module.exports = function (injectedStore) {
 
     async function upsert(body) {
         const user = {
-            id: body.id,
-            name: body.name,
-            username: body.username,
+            cedula: body.cedula,
+            id_rol: body.id_rol,
+            nombreUsuario: body.nombreUsuario,
+            correoElectronico: body.correoElectronico,
+            codPais: body.codPais,
+            numeroCelular: body.numeroCelular,
+            photo: body.photo,
         };
-        if (!user.name) {
+        if (body.accion == 'insert' && (!user.cedula || !user.id_rol || !user.nombreUsuario ||  !user.correoElectronico || !user.codPais || !user.numeroCelular || !body.userPassword)) {
             return Promise.reject('No se indico la información necesaria');
         }
-        if(!user.id) {
-            user.id = nanoid();
-        }
 
-        if (body.password && body.username) {
+        const response = await store.upsert(TABLA, user, body.accion);
+        if (body.userPassword && body.cedula) {
             await auth.upsert({
-                id: user.id,
-                username: user.username,
-                password: body.password,
-            });
+                cedula: user.cedula,
+                userPassword: body.userPassword,
+            }, body.accion);
         }
-        return store.upsert(TABLA, user);
+        return response;
     }
 
     function remove(id) {
