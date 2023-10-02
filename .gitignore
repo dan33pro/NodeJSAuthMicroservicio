@@ -129,4 +129,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-postgres_data
+apptransmosquera-mysql
