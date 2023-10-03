@@ -97,6 +97,24 @@ function query(table, query) {
     });
 }
 
+function query(table, query, join) {
+    let joinQuery = '';
+    if(join) {
+        const key = Object.keys(join)[0];
+        const val = join[key];
+        joinQuery = `JOIN ${key} ON ${table.name}.${val} = ${key}.${table.pk}`;
+    }
+
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT * FROM ${table.name} ${joinQuery} WHERE ${table.name}.?`, query, (err, res) => {
+            if(err) {
+                return reject(err);
+            }
+            resolve(res || null);
+        });
+    })
+}
+
 function remove(table, id) {
     return new Promise((resolve, reject) => {
         connection.query(`DELETE FROM ${table.name} WHERE ${table.pk}=${id}`, (err, data) => {
