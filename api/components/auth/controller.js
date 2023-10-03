@@ -19,10 +19,10 @@ module.exports = function (injectedStore) {
             name: "Usuarios",
             pk: "cedula",
         };
-        const dataUser = await store.query(TABLAUSERS, {
+        const dataUser = (await store.query(TABLAUSERS, {
             correoElectronico: correoElectronico,
-        });
-        const data = await store.query(TABLA, { cedula: dataUser.cedula });
+        }))[0];
+        const data = (await store.query(TABLA, { cedula: dataUser.cedula }))[0];
         return bcrypt
             .compare(userPassword, data.userPassword)
             .then((sonIguales) => {
@@ -40,10 +40,10 @@ module.exports = function (injectedStore) {
             name: "Usuarios",
             pk: "cedula",
         };
-        const dataUser = await store.query(TABLAUSERS, {
+        const dataUser = (await store.query(TABLAUSERS, {
             correoElectronico: correoElectronico,
-        });
-        const dataAuth = await store.query(TABLA, { cedula: dataUser.cedula });
+        }))[0];
+        const dataAuth = (await store.query(TABLA, { cedula: dataUser.cedula }))[0];
         if (dataAuth.pinIntents >= 3) {
             dataAuth.pin = null;
             dataAuth.pinIntents = 0;
@@ -71,10 +71,10 @@ module.exports = function (injectedStore) {
             name: "Usuarios",
             pk: "cedula",
         };
-        const dataUser = await store.query(TABLAUSERS, {
+        const dataUser = (await store.query(TABLAUSERS, {
             correoElectronico: correoElectronico,
-        });
-        const dataAuth = await store.query(TABLA, { cedula: dataUser.cedula });
+        }))[0];
+        const dataAuth = (await store.query(TABLA, { cedula: dataUser.cedula }))[0];
 
         let pin = Math.trunc(Math.random() * 999999);
         dataAuth.pin = pin;
@@ -106,7 +106,7 @@ module.exports = function (injectedStore) {
         }
 
         if (accion == "update") {
-            let authDatainBD = await store.query(TABLA, { cedula: data.cedula });
+            let authDatainBD = (await store.query(TABLA, { cedula: data.cedula }))[0];
             authData.id_auth = authDatainBD.id_auth;
         }
         return store.upsert(TABLA, authData, accion);
