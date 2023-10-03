@@ -1,12 +1,27 @@
 {
-    "rewrites": [
+    "version": 2,
+    "builds": [
         {
-            "source": "/api/auth(.*)",
-            "destination": "src/microservices/MSAuth/index.js"
+            "src": "src/microservices/MSAuth/index.js",
+            "use": "@vercel/node"
         },
         {
-            "source": "/api/user(.*)",
-            "destination": "/src/microservices/MSAuth/index.js"
+            "src": "src/microservices/MSMySQL/index.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/auth(.*)",
+            "dest": "/src/microservices/MSAuth/index.js"
+        },
+        {
+            "src": "/api/user(.*)",
+            "dest": "/src/microservices/MSAuth/index.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/src/microservices/MSMySQL/index.js"
         }
     ]
 }

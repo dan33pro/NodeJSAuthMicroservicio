@@ -5,7 +5,7 @@ module.exports = {
         port: process.env.API_PORT || 3000,
     },
     jwt: {
-        secret: process.env.JWT_SECRET || 'notasecret!',
+        secret: process.env.JWT_SECRET || '',
     },
     mysql: {
         host: process.env.MYSQL_HOST || '',
@@ -15,7 +15,7 @@ module.exports = {
         port: process.env.MYSQL_PORT || '',
     },
     mysqlService: {
-        host: process.env.MYSQL_SERVICE_HOST || 'localhost',
+        host: process.env.MYSQL_SERVICE_HOST || '',
         port: process.env.MYSQL_SERVICE_PORT || '',
     },
     sendMail: {
