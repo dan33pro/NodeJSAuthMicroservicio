@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 
 const swaggerUi = require('swagger-ui-express');
 
-const config = require('../config.js');
-const user = require('./components/user/network');
-const auth = require('./components/auth/network');
-const errors = require('../network/errors.js');
+const config = require('../../../config');
+const user = require('./components/user/network.js');
+const auth = require('./components/auth/network.js');
+const errors = require('../../tools/network/errors');
 
 const app = express();
 

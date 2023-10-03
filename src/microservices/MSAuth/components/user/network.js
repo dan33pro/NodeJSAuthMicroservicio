@@ -1,7 +1,7 @@
 const express = require('express');
 
 const secure = require('./secure');
-const response = require('../../../network/response')
+const response = require('../../../../tools/network/response');
 const controller = require('./index');
 
 const router = express.Router();

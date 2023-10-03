@@ -2,16 +2,16 @@ const TABLA = {
     name: "Auth",
     pk: "id_auth",
 };
-const auth = require("../../../auth/index");
-const error = require("../../../utils/error");
-const sendMail = require("../../../utils/mailMessage");
-const sendSMS = require("../../../utils/smsMessage");
+const auth = require("../../../../tools/auth/index");
+const error = require("../../../../tools/utils/error");
+const sendMail = require("../../../../tools/utils/mailMessage");
+const sendSMS = require("../../../../tools/utils/smsMessage");
 const bcrypt = require("bcrypt");
 
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
-        store = require("../../../store/mysql");
+        store = require("../../../../tools/store/mysql");
     }
 
     async function login(correoElectronico, userPassword) {

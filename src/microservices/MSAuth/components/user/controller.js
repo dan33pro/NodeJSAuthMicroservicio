@@ -7,7 +7,7 @@ const TABLA = {
 module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
-        store = require('../../../store/mysql');
+        store = require('../../../../tools/store/mysql');
     }
     function list() {
         return store.list(TABLA);

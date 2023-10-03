@@ -1,7 +1,7 @@
 const express = require('express');
 
-const response = require('../network/response');
-const store = require('../store/mysql');
+const response = require('../../tools/network/response');
+const store = require('../../tools/store/mysql');
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 const twilio = require('twilio');
-const config = require("../config");
+const config = require("../../../config");
 const client = new twilio(config.sendSMS.accountSid, config.sendSMS.authToken);
 
 function sendSMS(codPais, phoneNumber, code) {

@@ -1,4 +1,4 @@
-const auth = require('../../../auth');
+const auth = require('../../../../tools/auth');
 
 module.exports = function checkAuth(action) {
 
