@@ -5,6 +5,7 @@ const TABLA = {
 const auth = require("../../../auth/index");
 const error = require("../../../utils/error");
 const sendMail = require("../../../utils/mailMessage");
+const sendSMS = require("../../../utils/smsMessage");
 const bcrypt = require("bcrypt");
 
 module.exports = function (injectedStore) {
@@ -34,6 +35,37 @@ module.exports = function (injectedStore) {
             });
     }
 
+    async function verificatioPin(correoElectronico, pin) {
+        const TABLAUSERS = {
+            name: "Usuarios",
+            pk: "cedula",
+        };
+        const dataUser = await store.query(TABLAUSERS, {
+            correoElectronico: correoElectronico,
+        });
+        const dataAuth = await store.query(TABLA, { cedula: dataUser.cedula });
+        if (dataAuth.pinIntents >= 3) {
+            dataAuth.pin = null;
+            dataAuth.pinIntents = 0;
+
+            await store.upsert(TABLA, dataAuth, "update");
+            throw error("Se exedio el limite de intentos", 418);
+        } else {
+            dataAuth.pinIntents = dataAuth.pinIntents + 1;
+            await store.upsert(TABLA, dataAuth, "update");
+        }
+        if (dataAuth.pin == pin && dataAuth.pin && pin) {
+            // Generar Token
+            let token = auth.sign(dataAuth);
+            dataAuth.pin = null;
+            dataAuth.pinIntents = 0;
+            store.upsert(TABLA, dataAuth, "update");
+            return token;
+        } else {
+            throw error("Pin invalido", 418);
+        }
+    }
+
     async function senVerificationPin(correoElectronico, metodo) {
         const TABLAUSERS = {
             name: "Usuarios",
@@ -52,6 +84,11 @@ module.exports = function (injectedStore) {
             case "mail":
                 return await sendMail(dataUser.correoElectronico, dataAuth.pin);
             case "phone":
+                return await sendSMS(
+                    dataUser.codPais,
+                    dataUser.numeroCelular,
+                    dataAuth.pin
+                );
                 break;
             default:
                 throw error("Metodo no valido", 405);
@@ -79,5 +116,6 @@ module.exports = function (injectedStore) {
         upsert,
         login,
         senVerificationPin,
+        verificatioPin,
     };
 };

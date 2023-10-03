@@ -17,5 +17,11 @@ module.exports = {
     sendMail: {
         mail: process.env.SEND_MAIL || '',
         password: process.env.APLICATION_PASSWORD,
-    }
+    },
+    sendSMS: {
+        accountSid: process.env.ACCOUNT_SID || '',
+        authToken: process.env.AUTH_TOKEN || '',
+        codPais: process.env.COD_PAIS || '',
+        phoneNumber: process.env.PHONE_NUMBER || '',
+    },
 };
