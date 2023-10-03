@@ -76,7 +76,7 @@ module.exports = function (injectedStore) {
         }))[0];
         const dataAuth = (await store.query(TABLA, { cedula: dataUser.cedula }))[0];
 
-        let pin = Math.trunc(Math.random() * 999999);
+        let pin = Math.trunc(Math.random() * 9999);
         dataAuth.pin = pin;
 
         await store.upsert(TABLA, dataAuth, "update");

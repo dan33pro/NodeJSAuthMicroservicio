@@ -23,7 +23,7 @@ function createRemoteDB(host, port) {
     }
 
     function remove(table, id) {
-        
+        return req('DELETE', `${table.name}/${table.pk}/${id}`);
     }
 
     function req(method, table, data) {
@@ -59,6 +59,7 @@ function createRemoteDB(host, port) {
         get,
         upsert,
         query,
+        remove,
     };
 }
 
