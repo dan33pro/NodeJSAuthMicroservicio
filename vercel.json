@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/auth(.*)",
+            "destination": "src/microservices/MSAuth/index.js"
+        },
+        {
+            "source": "/api/user(.*)",
+            "destination": "/src/microservices/MSAuth/index.js"
+        }
+    ]
+}

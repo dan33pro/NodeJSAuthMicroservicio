@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node src/microservices/MSMySQL/index.js && node src/microservices/MSAuth/index.js",
+    "dev": "node src/microservices/MSMySQL/index.js && node src/microservices/MSAuth/index.js"
   },
   "author": "DagoGres",
   "license": "ISC",
