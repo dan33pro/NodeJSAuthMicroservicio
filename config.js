@@ -4,8 +4,13 @@ module.exports = {
     api: {
         port: process.env.API_PORT || 3000,
     },
-    jwt: {
-        secret: process.env.JWT_SECRET || '',
+    mysqlService: {
+        host: process.env.MYSQL_SERVICE_HOST || '',
+        port: process.env.MYSQL_SERVICE_PORT || '',
+    },
+    cacheService: {
+        host: process.env.CACHE_SERVICE_HOST || '',
+        port: process.env.CACHE_SERVICE_PORT || '',
     },
     mysql: {
         host: process.env.MYSQL_HOST || '',
@@ -14,9 +19,13 @@ module.exports = {
         database: process.env.MYSQL_DB || '',
         port: process.env.MYSQL_PORT || '',
     },
-    mysqlService: {
-        host: process.env.MYSQL_SERVICE_HOST || '',
-        port: process.env.MYSQL_SERVICE_PORT || '',
+    redis: {
+        host: process.env.REDIS_HOST || '',
+        port: process.env.REDIS_PORT || '',
+        password: process.env.REDIS_PASSWORD || '',
+    },
+    jwt: {
+        secret: process.env.JWT_SECRET || '',
     },
     sendMail: {
         mail: process.env.SEND_MAIL || '',
