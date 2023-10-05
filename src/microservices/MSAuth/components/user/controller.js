@@ -17,6 +17,12 @@ module.exports = function (injectedStore) {
         return store.get(TABLA, id);
     }
 
+    function findByquery(key, value) {
+        let query = {};
+        query[key] = value;
+        return store.query(TABLA, query);
+    }
+
     async function upsert(body) {
         const user = {
             cedula: body.cedula,
@@ -53,5 +59,6 @@ module.exports = function (injectedStore) {
         get,
         upsert,
         remove,
+        findByquery,
     };
 };

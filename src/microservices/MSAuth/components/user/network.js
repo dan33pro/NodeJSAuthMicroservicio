@@ -7,6 +7,7 @@ const controller = require('./index');
 const router = express.Router();
 router.get('/', list);
 router.get('/:id', get);
+router.get('/:key/:value', findByquery);
 router.post('/', upsert);
 router.put('/', secure('update'), upsert);
 router.delete('/:id', secure('remove'), remove);
@@ -25,6 +26,14 @@ function get(req, res, next) {
     controller.get(req.params.id)
         .then((user) => {
             response.success(req, res, user, 200);
+        })
+        .catch(next);
+};
+
+function findByquery(req, res, next) {
+    controller.findByquery(req.params.key, req.params.value)
+        .then((result) => {
+            response.success(req, res, result, 200);
         })
         .catch(next);
 };
