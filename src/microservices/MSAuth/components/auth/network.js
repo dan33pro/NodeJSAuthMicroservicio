@@ -11,8 +11,8 @@ router.post("/verification-pin", verificationPin);
 function login(req, res, next) {
   controller
     .login(req.body.correoElectronico, req.body.userPassword)
-    .then((token) => {
-      response.success(req, res, token, 200);
+    .then((result) => {
+      response.success(req, res, result, 200);
     })
     .catch(next);
 }

@@ -28,7 +28,11 @@ module.exports = function (injectedStore) {
             .then((sonIguales) => {
                 if (sonIguales) {
                     // Generar Token
-                    return auth.sign(data);
+                    let res = {
+                        token: auth.sign(data),
+                        id_rol: dataUser.id_rol
+                    }
+                    return  res;
                 } else {
                     throw error("Información invalida", 418);
                 }
